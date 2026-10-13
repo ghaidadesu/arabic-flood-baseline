@@ -48,7 +48,7 @@ You need a free Gemini API key from <https://aistudio.google.com/apikey>.
 2. Run these cells (replace the repository address):
 
 ```python
-!git clone https://github.com/<YOUR-USERNAME>/<REPO-NAME>.git
+!git clone https://github.com/ghaidadesu/arabic-flood-baseline.git
 %cd <REPO-NAME>
 !pip install -q -r requirements.txt
 ```
@@ -68,7 +68,7 @@ os.environ["GEMINI_API_KEY"] = userdata.get("GEMINI_API_KEY")   # lets the scrip
 ### Option B - your own computer (Python 3.10+)
 
 ```bash
-git clone https://github.com/<YOUR-USERNAME>/<REPO-NAME>.git
+git clone https://github.com/ghaidadesu/arabic-flood-baseline.git
 cd <REPO-NAME>
 pip install -r requirements.txt
 export GEMINI_API_KEY="your_key_here"      # Windows PowerShell: $env:GEMINI_API_KEY="your_key_here"
