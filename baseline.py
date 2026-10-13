@@ -21,7 +21,8 @@ import time
 MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
 TEMPERATURE = 0
 SEED = 42
-MAX_API_ATTEMPTS = 3          # tries per request when Google returns a temporary error
+MAX_API_ATTEMPTS = 4          # tries per request when Google returns a temporary error
+REQUEST_TIMEOUT_MS = 45_000   # give up on one request after 45 
 MAX_REPAIRS_PER_CALL = 1      # extra "please fix your answer" tries per call
 RETRYABLE_CODES = (429, 500, 502, 503, 504)
 
@@ -77,11 +78,15 @@ def get_client():
             )
         try:
             from google import genai
+            from google.genai import types
         except ImportError as e:
             raise BaselineError(
                 "The google-genai package is missing. Run: pip install -r requirements.txt"
             ) from e
-        _client = genai.Client(api_key=key)
+        _client = genai.Client(
+            api_key=key,
+            http_options=types.HttpOptions(timeout=REQUEST_TIMEOUT_MS),
+        )
     return _client
 
 
@@ -220,6 +225,8 @@ def _friendly_error(error):
         return f"Model '{MODEL_NAME}' was not found. Check the model name (GEMINI_MODEL)."
     if code == 429:
         return "Rate limit / quota reached (code 429). Wait a minute and try again."
+    if "timeout" in type(error).__name__.lower():
+        return f"The request timed out after {REQUEST_TIMEOUT_MS // 1000}s. Try again later."
     return f"{type(error).__name__}: {error}"
 
 
@@ -248,11 +255,15 @@ def _call_model(prompt, trace):
             )
         except Exception as error:
             code = getattr(error, "code", None)
-            retryable = code in RETRYABLE_CODES or isinstance(error, (TimeoutError, ConnectionError))
+            retryable = (
+                code in RETRYABLE_CODES
+                or isinstance(error, (TimeoutError, ConnectionError))
+                or "timeout" in type(error).__name__.lower()
+            )
             if not retryable or attempt == MAX_API_ATTEMPTS:
                 raise BaselineError(_friendly_error(error)) from error
             trace["api_retries"] += 1
-            time.sleep((2 ** (attempt - 1)) + random.uniform(0, 1))
+            time.sleep(4 * attempt + random.uniform(0, 1))
             continue
         trace["calls"] += 1
         _add_usage(trace, response)
