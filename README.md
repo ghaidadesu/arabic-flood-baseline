@@ -49,7 +49,7 @@ You need a free Gemini API key from <https://aistudio.google.com/apikey>.
 
 ```python
 !git clone https://github.com/ghaidadesu/arabic-flood-baseline.git
-%cd <REPO-NAME>
+%cd arabic-flood-baseline
 !pip install -q -r requirements.txt
 ```
 
