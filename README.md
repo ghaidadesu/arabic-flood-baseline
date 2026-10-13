@@ -103,7 +103,7 @@ The Evaluation set must stay untouched until the formal evaluation; use Developm
 
 ## Settings
 
-All in `baseline.py`: `MODEL_NAME` (default `gemini-3.5-flash-lite`, or set the `GEMINI_MODEL` variable),
+All in `baseline.py`: `MODEL_NAME` (default `gemini-3.1-flash-lite`, or set the `GEMINI_MODEL` variable),
 `TEMPERATURE`, `SEED`, `MAX_REPAIRS_PER_CALL`, `MAX_API_ATTEMPTS`.
 `PRICE_INPUT_PER_M` and `PRICE_OUTPUT_PER_M` are empty: copy the prices for your model from Google's pricing page
 to get a cost estimate (until then `cost_usd` is `None`).
