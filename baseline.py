@@ -18,7 +18,7 @@ import time
 # ----------------------------------------------------------------------------
 # Settings (the same values must be used for the baseline and the treatment)
 # ----------------------------------------------------------------------------
-MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
+MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
 TEMPERATURE = 0
 SEED = 42
 MAX_API_ATTEMPTS = 4          # tries per request when Google returns a temporary error
